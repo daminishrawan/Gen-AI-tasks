@@ -1,0 +1,198 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyOBB/n7lwm9dRIt6fE64xgQ",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/daminishrawan/Gen-AI-tasks/blob/master/Assignment_2_NN_2\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Part A: Fixed Neural Network Architecture"
+      ],
+      "metadata": {
+        "id": "b2uXW-ckancc"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import torch\n",
+        "import torch.nn as nn\n",
+        "\n",
+        "# Define the Fixed Neural Network class\n",
+        "class FixedNeuralNetwork(nn.Module):\n",
+        "  def __init__(self):\n",
+        "    super(FixedNeuralNetwork, self).__init__()\n",
+        "    self.net = nn.Sequential(\n",
+        "        nn.Linear(1, 64), # Input layer -> Hidden Layer 1\n",
+        "        nn.Tanh(), # Hidden layer activation\n",
+        "        nn.Linear(64, 64), # Hidden Layer 1 -> Hidden Layer 2\n",
+        "        nn.Tanh(), # Hidden layer activation\n",
+        "        nn.Linear(64, 1) # Hidden Layer 2 -> Output layer (Linear output)\n",
+        "    )\n",
+        "\n",
+        "  def forward(self, x):\n",
+        "    return self.net(x)\n",
+        "\n",
+        "# Instantiate the model (optional, as per original comment, but keeping for completeness)\n",
+        "model = FixedNeuralNetwork()"
+      ],
+      "metadata": {
+        "id": "oK1DenrtV7jx"
+      },
+      "execution_count": 16,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "A. Print the Network Architecture Output"
+      ],
+      "metadata": {
+        "id": "PP9MOkU4aQDG"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(\"--- Model Architecture ---\")\n",
+        "print(model)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "LiaROVCLX4cb",
+        "outputId": "adc25d24-a982-4deb-803e-0629d9c3ea32"
+      },
+      "execution_count": 17,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "--- Model Architecture ---\n",
+            "FixedNeuralNetwork(\n",
+            "  (net): Sequential(\n",
+            "    (0): Linear(in_features=1, out_features=64, bias=True)\n",
+            "    (1): Tanh()\n",
+            "    (2): Linear(in_features=64, out_features=64, bias=True)\n",
+            "    (3): Tanh()\n",
+            "    (4): Linear(in_features=64, out_features=1, bias=True)\n",
+            "  )\n",
+            ")\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "B. Calculate &amp; Print Trainable Parameter Count"
+      ],
+      "metadata": {
+        "id": "o8ktejB2aWXe"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)\n",
+        "print(f\"Total Trainable Parameters: {total_params}\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "jSeBpGsyYrA8",
+        "outputId": "4322121b-92ff-4285-d241-1cb0461512ec"
+      },
+      "execution_count": 19,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Total Trainable Parameters: 4353\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "C. Test Forward Pass Output (Dummy Input)"
+      ],
+      "metadata": {
+        "id": "8jTULsCeaZHA"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Sample 3 input points: x = -1.0, 0.0, 1.0\n",
+        "sample_x = torch.tensor([[-1.0], [0.0], [1.0]], dtype=torch.float32)\n",
+        "\n",
+        "# Pass through model\n",
+        "sample_y_pred = model(sample_x)\n",
+        "\n",
+        "print(\"Sample Inputs shape :\", sample_x.shape)\n",
+        "print(\"Sample Outputs shape:\", sample_y_pred.shape)\n",
+        "print(\"Sample Output values:\\n\", sample_y_pred)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "5oYkvqGIY7F4",
+        "outputId": "fe8d0417-e292-4448-ce6a-d9b0750a10ba"
+      },
+      "execution_count": 21,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Sample Inputs shape : torch.Size([3, 1])\n",
+            "Sample Outputs shape: torch.Size([3, 1])\n",
+            "Sample Output values:\n",
+            " tensor([[0.1495],\n",
+            "        [0.2513],\n",
+            "        [0.3013]], grad_fn=<AddmmBackward0>)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "iVFJmZsxYsPl"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
